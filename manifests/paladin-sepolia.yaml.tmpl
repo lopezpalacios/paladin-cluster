@@ -1,0 +1,66 @@
+apiVersion: core.paladin.io/v1alpha1
+kind: Paladin
+metadata:
+  name: sepolia-node1
+  namespace: paladin
+spec:
+  baseLedgerEndpoint:
+    type: endpoint
+    endpoint:
+      jsonrpc: "$JSONRPC_URL"
+      ws: "$WS_URL"
+  config: |
+    log:
+      level: debug
+    publicTxManager:
+      gasLimit:
+        gasEstimateFactor: 2.0
+  database:
+    migrationMode: auto
+    mode: sidecarPostgres
+  domains:
+    - labelSelector:
+        matchLabels:
+          paladin.io/domain-name: noto
+    - labelSelector:
+        matchLabels:
+          paladin.io/domain-name: zeto
+    - labelSelector:
+        matchLabels:
+          paladin.io/domain-name: pente
+  registries:
+    - labelSelector:
+        matchLabels:
+          paladin.io/registry-name: evm-registry
+  secretBackedSigners:
+    - derivationType: bip32
+      keySelector: .*
+      keySelectorMustNotMatch: false
+      name: signer-1
+      secret: sepolia-node1.keys
+      type: autoHDWallet
+  service:
+    ports:
+      - name: rpc-http
+        nodePort: 31548
+        port: 8548
+        protocol: TCP
+      - name: rpc-ws
+        nodePort: 31549
+        port: 8549
+        protocol: TCP
+      - name: metrics
+        nodePort: 31550
+        port: 6100
+        protocol: TCP
+    type: NodePort
+  transports:
+    - name: grpc
+      plugin:
+        library: /app/transports/libgrpc.so
+        type: c-shared
+      configJSON: |
+        {
+          "port": 9000,
+          "address": "0.0.0.0"
+        }
