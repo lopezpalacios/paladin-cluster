@@ -8,9 +8,9 @@ echo " Paladin cluster starter"
 echo "=============================================="
 
 command -v docker >/dev/null 2>&1 || { echo "ERROR: docker not found. Install docker (or colima on macOS)."; exit 1; }
-command -v kind >/dev/null 2>&1 || { echo "ERROR: kind not found. Run: nix develop"; exit 1; }
-command -v kubectl >/dev/null 2>&1 || { echo "ERROR: kubectl not found. Run: nix develop"; exit 1; }
-command -v helm >/dev/null 2>&1 || { echo "ERROR: helm not found. Run: nix develop"; exit 1; }
+command -v kind >/dev/null 2>&1 || { echo "ERROR: kind not found. Run: ./install-tools.sh (or: nix develop)"; exit 1; }
+command -v kubectl >/dev/null 2>&1 || { echo "ERROR: kubectl not found. Run: ./install-tools.sh (or: nix develop)"; exit 1; }
+command -v helm >/dev/null 2>&1 || { echo "ERROR: helm not found. Run: ./install-tools.sh (or: nix develop)"; exit 1; }
 
 echo ""
 echo "Base ledger choice:"
