@@ -1,0 +1,22 @@
+{
+  "name": "paladin-example-hello-vlad",
+  "version": "0.1.0",
+  "description": "HelloVlad: compile a Solidity contract from source and deploy it via Paladin",
+  "main": "build/index.js",
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "start": "ts-node ./src/index.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@lfdecentralizedtrust/paladin-sdk": "^1.0.0",
+    "solc": "^0.8.26"
+  }
+}

@@ -53,6 +53,13 @@ kubectl -n paladin get pods -w
 
 Paladin UI: <http://localhost:31548/ui>
 
+## Tutorials
+
+- [HelloVlad](examples/hello-vlad/TUTORIAL.md) — compile your own `hello-vlad.sol`
+  from source, deploy via Paladin, verify the emitted event (no pre-compiled ABI)
+
+For agents: see [AGENTS.md](AGENTS.md) for repo layout and conventions.
+
 ## Two devices
 
 Each device runs its own local stack (this script). Same ports on both: `31545–31750`.
