@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paladin Workflows — Overview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Diagram Design</p>
+    <h1>Paladin workflows on this cluster</h1>
+
+    <svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="workflows-title workflows-desc">
+      <title id="workflows-title">Paladin workflows on this cluster</title>
+      <desc id="workflows-desc">Four workflows: public transactions on Sepolia, private contracts in pente groups, notarized tokens in noto, and 2-of-2 co-signed notary approvals between devices.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Zones -->
+      <rect x="40" y="60" width="300" height="400" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="70" y="64" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="122" y="73" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">PUBLIC · SEPOLIA</text>
+
+      <rect x="360" y="60" width="320" height="400" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="390" y="64" width="140" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="460" y="73" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">LOCAL DEVNET · KIND + BESU</text>
+
+      <rect x="700" y="60" width="260" height="400" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="730" y="64" width="80" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="770" y="73" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">2-OF-2 NOTARY</text>
+
+      <!-- Arrows -->
+      <!-- SDK -> sepolia node -->
+      <line x1="130" y1="500" x2="130" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="144" y="452" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">PUBLIC tx → visible on etherscan</text>
+      <!-- SDK -> devnet nodes -->
+      <line x1="420" y1="500" x2="420" y2="380" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="434" y="452" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">PRIVATE tx → P2P only</text>
+      <!-- Noto notary approve -->
+      <path d="M 600,300 H 640 Q 660,300 660,320 V 420 Q 660,440 680,440 H 740"
+            fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="674" y="380" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">approve + submit</text>
+
+      <!-- Public zone nodes -->
+      <rect x="55" y="100" width="270" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="190" y="124" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">sepolia-node1</text>
+      <text x="190" y="140" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">Tenderly RPC · :31848</text>
+
+      <rect x="55" y="190" width="270" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="190" y="214" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">HelloVlad + StorageVlad</text>
+      <text x="190" y="230" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">public deploy · call · event</text>
+
+      <rect x="55" y="280" width="270" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="190" y="304" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">etherscan</text>
+      <text x="190" y="320" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">anyone reads the tx</text>
+
+      <!-- Devnet zone nodes -->
+      <rect x="375" y="100" width="290" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="520" y="124" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">paladin-node1/2/3</text>
+      <text x="520" y="140" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">:31548 · :31648 · :31748</text>
+
+      <rect x="375" y="190" width="290" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="520" y="214" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">pente privacy group</text>
+      <text x="520" y="230" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">node1+node2 see · node3 blind</text>
+
+      <rect x="375" y="280" width="290" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="520" y="304" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="500" text-anchor="middle">noto token · notary = node1</text>
+      <text x="520" y="320" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">mint · transfer · burn · lock</text>
+
+      <!-- 2-of-2 zone nodes -->
+      <rect x="715" y="100" width="230" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="830" y="124" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="500" text-anchor="middle">notary-2of2 module</text>
+      <text x="830" y="140" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">inside each node</text>
+
+      <rect x="715" y="190" width="230" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="830" y="214" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="500" text-anchor="middle">cosigner API A ↔ B</text>
+      <text x="830" y="230" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign · :9191</text>
+
+      <rect x="715" y="280" width="230" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="830" y="304" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="500" text-anchor="middle">frozen when peer down</text>
+      <text x="830" y="320" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">2-of-2 enforcement</text>
+
+      <!-- SDK client -->
+      <rect x="350" y="476" width="300" height="44" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="500" y="502" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">SDK scripts (hello-vlad · storage-vlad · pente-group · noto-token)</text>
+
+      <line x1="500" y1="476" x2="500" y2="336" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Footnote -->
+      <text x="500" y="580" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">PUBLIC = READABLE BY ALL · PRIVATE = HASHES ON CHAIN, DATA ONLY TO MEMBERS · 2-OF-2 = NEITHER NOTARY SIGNS ALONE</text>
+    </svg>
+  </div>
+</body>
+</html>

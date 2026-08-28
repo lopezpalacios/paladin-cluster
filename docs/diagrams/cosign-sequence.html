@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Request Approval — Sequence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Sequence · Diagram Design</p>
+    <h1>One sign request under 2-of-2</h1>
+
+    <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cosign-seq-title cosign-seq-desc">
+      <title id="cosign-seq-title">One sign request under 2-of-2</title>
+      <desc id="cosign-seq-desc">The Paladin node asks its signing module to sign; the module first obtains an attestation from the remote cosigner API and only signs if the attestation is verified.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-open" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polyline points="0 0, 8 3, 0 6" fill="none" stroke="#4f5d75" stroke-width="1.2"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Lifelines -->
+      <line x1="170" y1="120" x2="170" y2="560" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="420" y1="120" x2="420" y2="560" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="670" y1="120" x2="670" y2="560" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="880" y1="120" x2="880" y2="560" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <!-- Actor boxes -->
+      <rect x="95" y="80" width="150" height="40" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="170" y="104" fill="#2d3142" font-size="11" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Paladin node A</text>
+
+      <rect x="345" y="80" width="150" height="40" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="420" y="104" fill="#2d3142" font-size="11" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">signing module A</text>
+
+      <rect x="595" y="80" width="150" height="40" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="670" y="104" fill="#2d3142" font-size="11" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">cosigner API (B)</text>
+
+      <rect x="805" y="80" width="150" height="40" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="880" y="104" fill="#2d3142" font-size="11" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">agent key B</text>
+
+      <!-- Activation bars -->
+      <rect x="416" y="170" width="8" height="360" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+      <rect x="666" y="230" width="8" height="180" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+
+      <!-- 1. Sign request -->
+      <line x1="170" y1="170" x2="412" y2="170" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="291" y="163" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Sign(payload, key)</text>
+
+      <!-- 2. POST /cosign -->
+      <line x1="424" y1="230" x2="662" y2="230" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="543" y="223" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign · attestation</text>
+
+      <!-- ALT frame -->
+      <rect x="380" y="276" width="540" height="164" rx="4" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <rect x="380" y="276" width="40" height="16" rx="2" fill="#f5f5f5" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+      <text x="400" y="288" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">ALT</text>
+      <text x="432" y="296" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">[keyIdentifier allowed]</text>
+      <line x1="388" y1="360" x2="912" y2="360" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="432" y="380" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.04em">[else]</text>
+
+      <!-- 3. approved return -->
+      <line x1="666" y1="330" x2="428" y2="330" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="547" y="323" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">approved + attestation sig</text>
+
+      <!-- 4. rejected return -->
+      <line x1="666" y1="404" x2="428" y2="404" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="547" y="397" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rejected: not allowed by policy</text>
+
+      <!-- 5. self-message: policy check -->
+      <path d="M 670,262 H 720 Q 728,262 728,270 V 300 Q 728,308 720,308 H 678" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+      <text x="738" y="288" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">policy check</text>
+
+      <!-- 6. self-message: verify -->
+      <path d="M 420,470 H 468 Q 476,470 476,478 V 506 Q 476,514 468,514 H 428" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#arrow)"/>
+      <text x="486" y="496" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">verify attestation sig</text>
+
+      <!-- 7. signed payload return (coral headline) -->
+      <line x1="420" y1="530" x2="178" y2="530" stroke="#eb6c36" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow-accent)"/>
+      <text x="299" y="523" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">signed payload</text>
+    </svg>
+  </div>
+</body>
+</html>

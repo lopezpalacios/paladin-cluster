@@ -23,11 +23,19 @@ smart contracts on an Ethereum-style base ledger.
 ├── manifests/
 │   └── paladin-sepolia.yaml.tmpl  Paladin CR with external EVM endpoint ($JSONRPC_URL/$WS_URL)
 └── examples/
-    └── hello-vlad/
-        ├── TUTORIAL.md           full walkthrough
-        ├── contracts/hello-vlad.sol   Solidity source
-        ├── scripts/compile.mjs        solc -> abis/HelloVlad.json
-        └── src/index.ts               deploy + call + verify via paladin-sdk
+    ├── hello-vlad/        public deploy from own .sol (Sepolia)
+    ├── storage-vlad/      public string+uint256 store (Sepolia)
+    ├── pente-group/       privacy group, private contract, outsider test
+    ├── noto-token/        notarized tokens: mint/transfer/burn + receipts
+    └── notary-2of2/       two-device co-sign API demo (demo.sh)
+├── signingmodules/notary-2of2/
+│   ├── module (c-shared plugin, builds inside paladin tree)
+│   └── cosigner/          standalone HTTP API agent (stdlib only)
+│       ├── API.md         API spec (POST /cosign, GET /healthz)
+│       ├── Dockerfile
+│       └── k8s.yaml       Deployment + Service + Secret
+├── docs/diagrams/         self-contained HTML diagrams (diagram-design style)
+└── scripts/build-signingmodule.sh   rsync module into paladin tree + build .so + agent
 ```
 
 ## Commands

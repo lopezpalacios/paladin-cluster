@@ -22,10 +22,10 @@ echo "==> Building signing module (.so)"
 )
 echo "==> Module built: $PALADIN_SRC/signingmodules/notary-2of2/libnotary2of2.so"
 
-echo "==> Building cosigner agent"
+echo "==> Building cosigner agent (standalone module, no paladin tree needed)"
 (
-  cd "$PALADIN_SRC/signingmodules/notary-2of2"
-  go build -o cosigner ./cosigner
+  cd "$MODULE_DIR/cosigner"
+  nix shell nixpkgs#go -c go build -o cosigner .
 )
 echo "==> Agent built: $PALADIN_SRC/signingmodules/notary-2of2/cosigner/cosigner"
 

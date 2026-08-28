@@ -57,6 +57,16 @@ Paladin UI: <http://localhost:31548/ui>
 
 - [HelloVlad](examples/hello-vlad/TUTORIAL.md) — compile your own `hello-vlad.sol`
   from source, deploy via Paladin, verify the emitted event (no pre-compiled ABI)
+- [storage-vlad](examples/storage-vlad) — public store of string + uint256 on Sepolia
+- [pente-group](examples/pente-group) — private contract in a privacy group, outsider denied
+- [noto-token](examples/noto-token) — notarized tokens: mint, transfer, burn, per-node receipt visibility
+- [notary-2of2](examples/notary-2of2) — two-device co-signed notary API + demo
+
+## Diagrams
+
+- [2-of-2 notary architecture](docs/diagrams/cosign-architecture.html)
+- [Sign request sequence](docs/diagrams/cosign-sequence.html)
+- [All workflows overview](docs/diagrams/workflows.html)
 
 For agents: see [AGENTS.md](AGENTS.md) for repo layout and conventions.
 
