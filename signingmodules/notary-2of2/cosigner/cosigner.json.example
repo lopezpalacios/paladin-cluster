@@ -1,0 +1,6 @@
+{
+  "listen": ":9191",
+  "privateKey": "<hex DER EC private key — generate: ./cosigner -genkey>",
+  "clientPublicKey": "",
+  "allowedKeyIdentifiers": [".*"]
+}
