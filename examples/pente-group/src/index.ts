@@ -15,15 +15,19 @@ class PrivateStorageVlad extends PentePrivateContract<void> {
 
 const NODE1_URL = process.env.NODE1_URL || "http://localhost:31548";
 const NODE2_URL = process.env.NODE2_URL || "http://localhost:31648";
+const NODE3_URL = process.env.NODE3_URL || "http://localhost:31748";
 const NODE1_ID = process.env.NODE1_ID || "node1";
 const NODE2_ID = process.env.NODE2_ID || "node2";
+const NODE3_ID = process.env.NODE3_ID || "node3";
 
 async function main(): Promise<boolean> {
   const paladinNode1 = new PaladinClient({ url: NODE1_URL });
   const paladinNode2 = new PaladinClient({ url: NODE2_URL });
+  const paladinNode3 = new PaladinClient({ url: NODE3_URL });
 
   const [verifierNode1] = paladinNode1.getVerifiers(`owner@${NODE1_ID}`);
   const [verifierNode2] = paladinNode2.getVerifiers(`owner@${NODE2_ID}`);
+  const [verifierNode3] = paladinNode3.getVerifiers(`owner@${NODE3_ID}`);
   logger.log("Node1 verifier:", verifierNode1.lookup);
   logger.log("Node2 verifier:", verifierNode2.lookup);
 
@@ -100,6 +104,22 @@ async function main(): Promise<boolean> {
   }
   logger.log("STEP 4: Verified!");
   logger.log("\n" + retrieveResult["note"] + " " + retrieveResult["amount"] + " chf\n");
+
+  logger.log("STEP 5: Node3 (outsider) attempting to retrieve the value...");
+  const node3Group = memberPrivacyGroup.using(paladinNode3);
+  const node3Contract = new PrivateStorageVlad(node3Group, privateContractAddress);
+  try {
+    await node3Contract.call({
+      from: verifierNode3.lookup,
+      function: "retrieve",
+      data: {},
+    });
+    logger.error("STEP 5: Node3 accessed the private data - PRIVACY BROKEN!");
+    return false;
+  } catch (err) {
+    logger.log("STEP 5: Expected error - Node3 cannot retrieve the data. Access denied.");
+    logger.log("STEP 5: Privacy verified!");
+  }
   return true;
 }
 
