@@ -12,7 +12,15 @@ spec:
   config: |
     log:
       level: debug
+    blockIndexer:
+      fromBlock: 0xb0c180
+      requiredConfirmations: 6
+      commitBatchSize: 2
+      commitBatchTimeout: "5s"
     publicTxManager:
+      gasPrice:
+        ethFeeHistory:
+          priorityFeePercentile: 85
       gasLimit:
         gasEstimateFactor: 2.0
   database:
@@ -42,15 +50,15 @@ spec:
   service:
     ports:
       - name: rpc-http
-        nodePort: 31548
+        nodePort: 31848
         port: 8548
         protocol: TCP
       - name: rpc-ws
-        nodePort: 31549
+        nodePort: 31849
         port: 8549
         protocol: TCP
       - name: metrics
-        nodePort: 31550
+        nodePort: 31850
         port: 6100
         protocol: TCP
     type: NodePort
@@ -64,3 +72,8 @@ spec:
           "port": 9000,
           "address": "0.0.0.0"
         }
+      ports:
+        - name: transport-grpc
+          port: 9000
+          protocol: TCP
+          targetPort: 9000
