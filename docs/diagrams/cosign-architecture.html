@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2-of-2 Notary Signing — Architecture</title>
+  <title>2-of-2 Notary Signing, Full Architecture</title>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,6 +12,7 @@
       --color-ink:     #2d3142;
       --color-muted:   #4f5d75;
       --color-accent:  #eb6c36;
+      --color-link:    #2e5aa8;
       --font-sans:     'Geist', system-ui, sans-serif;
       --font-serif:    'Instrument Serif', serif;
       --font-mono:     'Geist Mono', ui-monospace, monospace;
@@ -45,17 +46,78 @@
       color: var(--color-ink);
       margin-bottom: 1.5rem;
     }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin: 2.2rem 0 0.8rem;
+      color: var(--color-ink);
+    }
+    p { color: var(--color-muted); font-size: 0.92rem; line-height: 1.6; max-width: 72ch; }
+    p + p { margin-top: 0.6rem; }
     svg { width: 100%; min-width: 900px; display: block; }
+    .steps { counter-reset: step; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.6rem 0 0.6rem 2.6rem;
+      border-top: 1px solid rgba(45,49,66,0.10);
+      color: var(--color-muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      max-width: 76ch;
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0.2rem;
+      top: 0.75rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      border: 1px solid var(--color-accent);
+      color: var(--color-accent);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    table { border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 0.85rem; width: 100%; max-width: 760px; }
+    th, td { text-align: left; padding: 0.45rem 0.8rem 0.45rem 0; border-top: 1px solid rgba(45,49,66,0.12); vertical-align: top; }
+    th { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); font-weight: 500; }
+    td { color: var(--color-muted); }
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #ffffff;
+      border: 1px solid rgba(45,49,66,0.15);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      color: var(--color-ink);
+      max-width: 760px;
+      line-height: 1.5;
+    }
+    .note {
+      border-left: 3px solid var(--color-accent);
+      padding: 0.35rem 0 0.35rem 1rem;
+      margin: 1rem 0;
+      max-width: 76ch;
+    }
+    a { color: var(--color-link); text-decoration: none; border-bottom: 1px solid rgba(46,90,168,0.3); }
+    .back { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
   </style>
 </head>
 <body>
   <div class="frame">
     <p class="eyebrow">Architecture · Diagram Design</p>
-    <h1>2-of-2 notary signing across two devices</h1>
+    <h1>2-of-2 notary signing, full picture</h1>
 
-    <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cosign-arch-title cosign-arch-desc">
-      <title id="cosign-arch-title">2-of-2 notary signing across two devices</title>
-      <desc id="cosign-arch-desc">Each device runs a Paladin node with a signing module that must obtain approval from the cosigner API on the other device before its local key can sign.</desc>
+    <svg viewBox="0 0 1000 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cosign-arch2-title cosign-arch2-desc">
+      <title id="cosign-arch2-title">2-of-2 notary signing, full architecture</title>
+      <desc id="cosign-arch2-desc">Full architecture of the 2-of-2 signing system: each device runs a Paladin node, a signing module plugin with a local signer, and a cosigner HTTP API; the module on each device must obtain a verified attestation from the other device's agent before its local key can sign.</desc>
       <defs>
         <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
         <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
@@ -64,70 +126,173 @@
       <rect width="100%" height="100%" fill="#f5f5f5"/>
 
       <!-- Zones -->
-      <rect x="40" y="60" width="420" height="440" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
-      <rect x="82" y="64" width="64" height="12" rx="2" fill="#f5f5f5"/>
-      <text x="114" y="73" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DEVICE A</text>
+      <rect x="40" y="70" width="400" height="480" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="76" y="74" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="108" y="83" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DEVICE A</text>
 
-      <rect x="540" y="60" width="420" height="440" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
-      <rect x="582" y="64" width="64" height="12" rx="2" fill="#f5f5f5"/>
-      <text x="614" y="73" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DEVICE B</text>
+      <rect x="560" y="70" width="400" height="480" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="596" y="74" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="628" y="83" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DEVICE B</text>
+
+      <!-- Tunnel zone (middle, dashed boundary) -->
+      <rect x="452" y="200" width="96" height="220" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.18)" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <rect x="458" y="204" width="84" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="500" y="213" fill="rgba(45,49,66,0.40)" font-size="6.5" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.10em">TAILSCALE</text>
 
       <!-- Arrows (before nodes) -->
-      <!-- Module A -> Agent B (coral, HTTP) -->
-      <path d="M 260,300 H 480 Q 500,300 500,320 V 420 Q 500,440 520,440 H 700"
+      <!-- 3. Module A -> Agent B -->
+      <path d="M 250,392 H 430 Q 450,392 450,412 V 470 Q 450,490 470,490 H 680"
             fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
-      <!-- Module B -> Agent A (coral, HTTP) -->
-      <path d="M 740,300 H 520 Q 500,300 500,320 V 420 Q 500,440 480,440 H 300"
+      <!-- 4. Agent B -> Module A (return) -->
+      <path d="M 680,506 H 470 Q 450,506 450,486 V 430 Q 450,410 430,410 H 258"
+            fill="none" stroke="#eb6c36" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-accent)"/>
+      <!-- 7. Module B -> Agent A -->
+      <path d="M 750,392 H 570 Q 550,392 550,412 V 470 Q 550,490 530,490 H 320"
             fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
-      <!-- Node A -> Module A -->
-      <line x1="170" y1="224" x2="170" y2="272" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-      <!-- Node B -> Module B -->
-      <line x1="830" y1="224" x2="830" y2="272" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
-      <!-- Local sign: Module A -> Node A (dashed return) -->
-      <line x1="230" y1="300" x2="230" y2="224" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
-      <line x1="770" y1="300" x2="770" y2="224" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <!-- 8. Agent A -> Module B (return) -->
+      <path d="M 320,506 H 530 Q 550,506 550,486 V 430 Q 550,410 570,410 H 742"
+            fill="none" stroke="#eb6c36" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-accent)"/>
+      <!-- 1. Node A -> Module A -->
+      <line x1="170" y1="262" x2="170" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- 6. Module A -> Node A (signed) -->
+      <line x1="200" y1="340" x2="200" y2="300" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <!-- Node B <-> Module B -->
+      <line x1="830" y1="262" x2="830" y2="300" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="800" y1="340" x2="800" y2="300" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+      <!-- Number badges on edges -->
+      <circle cx="170" cy="281" r="8" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1"/><text x="170" y="284" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">1</text>
+      <circle cx="200" cy="320" r="8" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1"/><text x="200" y="323" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">6</text>
+      <circle cx="465" cy="392" r="8" fill="#f5f5f5" stroke="#eb6c36" stroke-width="1"/><text x="465" y="395" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">3</text>
+      <circle cx="465" cy="506" r="8" fill="#f5f5f5" stroke="#eb6c36" stroke-width="1"/><text x="465" y="509" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">4</text>
+      <circle cx="535" cy="392" r="8" fill="#f5f5f5" stroke="#eb6c36" stroke-width="1"/><text x="535" y="395" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">7</text>
+      <circle cx="535" cy="506" r="8" fill="#f5f5f5" stroke="#eb6c36" stroke-width="1"/><text x="535" y="509" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle">8</text>
 
       <!-- Edge labels -->
-      <text x="500" y="380" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign</text>
-      <text x="500" y="408" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign</text>
-      <text x="145" y="250" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">Sign(payload)</text>
-      <text x="845" y="250" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">Sign(payload)</text>
-      <text x="238" y="215" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">signed</text>
-      <text x="778" y="215" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">signed</text>
+      <text x="530" y="470" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign</text>
+      <text x="470" y="485" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">POST /cosign</text>
+      <text x="140" y="293" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">Sign(payload,key)</text>
+      <text x="208" y="325" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">signed</text>
+      <text x="862" y="293" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">Sign(payload,key)</text>
+      <text x="792" y="325" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">signed</text>
 
       <!-- Node A -->
-      <rect x="80" y="168" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="170" y="192" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Paladin node A</text>
-      <text x="170" y="208" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">notary wallet · HD key</text>
+      <rect x="80" y="196" width="200" height="66" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="180" y="218" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Paladin node A</text>
+      <text x="180" y="234" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">notary wallet · HD key</text>
+      <text x="180" y="247" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">wallets: signerType=plugin</text>
 
       <!-- Module A -->
-      <rect x="80" y="272" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="170" y="296" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">signing module</text>
-      <text x="170" y="312" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">notary-2of2.so</text>
+      <rect x="80" y="330" width="200" height="96" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="180" y="350" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">signing module</text>
+      <text x="180" y="366" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">notary-2of2.so · c-shared</text>
+      <line x1="92" y1="376" x2="268" y2="376" stroke="rgba(45,49,66,0.12)"/>
+      <text x="92" y="390" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· local signer (keystore + bip32)</text>
+      <text x="92" y="403" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· attestation = sha256(payload‖key)</text>
+      <text x="92" y="416" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· verify agent sig (ECDSA P-256)</text>
 
       <!-- Agent A -->
-      <rect x="80" y="412" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="170" y="436" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">cosigner agent A</text>
-      <text x="170" y="452" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">API · :9191 · agent key</text>
+      <rect x="80" y="478" width="200" height="66" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="180" y="500" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">cosigner agent A</text>
+      <text x="180" y="516" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">API :9191 · policy allowlist</text>
+      <text x="180" y="529" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">agent key · audit log</text>
 
       <!-- Node B -->
-      <rect x="740" y="168" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="830" y="192" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Paladin node B</text>
-      <text x="830" y="208" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">notary wallet · HD key</text>
+      <rect x="720" y="196" width="200" height="66" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="820" y="218" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">Paladin node B</text>
+      <text x="820" y="234" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">notary wallet · HD key</text>
+      <text x="820" y="247" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">wallets: signerType=plugin</text>
 
       <!-- Module B -->
-      <rect x="740" y="272" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="830" y="296" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">signing module</text>
-      <text x="830" y="312" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">notary-2of2.so</text>
+      <rect x="720" y="330" width="200" height="96" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="820" y="350" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">signing module</text>
+      <text x="820" y="366" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">notary-2of2.so · c-shared</text>
+      <line x1="732" y1="376" x2="908" y2="376" stroke="rgba(45,49,66,0.12)"/>
+      <text x="732" y="390" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· local signer (keystore + bip32)</text>
+      <text x="732" y="403" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· attestation = sha256(payload‖key)</text>
+      <text x="732" y="416" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">· verify agent sig (ECDSA P-256)</text>
 
       <!-- Agent B -->
-      <rect x="740" y="412" width="180" height="56" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
-      <text x="830" y="436" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="middle">cosigner agent B</text>
-      <text x="830" y="452" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">API · :9191 · agent key</text>
+      <rect x="720" y="478" width="200" height="66" rx="4" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="820" y="500" fill="#2d3142" font-size="12" font-weight="500" font-family="'Geist', sans-serif" text-anchor="500" text-anchor="middle">cosigner agent B</text>
+      <text x="820" y="516" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">API :9191 · policy allowlist</text>
+      <text x="820" y="529" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">agent key · audit log</text>
+
+      <!-- Step 2 and 5: internal, annotated left of module A -->
+      <text x="60" y="318" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">2 build</text>
+      <text x="60" y="330" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">  attestation</text>
+      <text x="296" y="318" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace">5 verify sig</text>
 
       <!-- Footnote -->
-      <text x="500" y="540" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">EITHER AGENT OFFLINE → THAT DEVICE'S NOTARY KEY CANNOT SIGN</text>
+      <text x="500" y="580" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">EITHER AGENT OFFLINE → THAT DEVICE'S NOTARY KEY CANNOT SIGN</text>
     </svg>
+
+    <h2>What happens on every sign request</h2>
+    <ol class="steps">
+      <li><strong>Paladin node A</strong> needs the notary key for a transaction (approve a noto transfer, sign a public tx). It calls its wallet, which is wired to the signing module plugin instead of a plain key store.</li>
+      <li>The module builds the <strong>attestation</strong>: <code>sha256("paladin-2of2-v1:" ‖ payloadHex ‖ ":" ‖ keyIdentifier)</code>. This binds the approval to one exact payload. A signature for this request is useless for any other.</li>
+      <li>The module sends <code>POST /cosign</code> over the Tailscale tunnel to <strong>Device B's agent</strong>: key identifier, algorithm, payload hex, attestation hash. No private key material ever leaves Device A.</li>
+      <li>Agent B runs the <strong>policy allowlist</strong> (regex over key identifiers). If allowed, it signs the attestation with its own P-256 key and returns <code>{approved: true, signature}</code>. If not, it returns a rejection with a reason. Every decision lands in the audit log.</li>
+      <li>The module verifies the agent's signature against the <strong>public key configured at setup</strong>. A forged or stale response fails here.</li>
+      <li>Only now does the module sign with its <strong>local key</strong> and hand the signature back to the node.</li>
+      <li><strong>Device B</strong> runs the identical setup mirrored: its module calls Agent A. Steps 2–6 repeat.</li>
+    </ol>
+
+    <h2>Security properties</h2>
+    <table>
+      <tr><th>Property</th><th>How it holds</th></tr>
+      <tr><td>Neither device signs alone</td><td>Local sign step happens only after a live, verified approval from the other device. Kill the agent and the key is frozen.</td></tr>
+      <tr><td>No key material crosses the wire</td><td>Only payload hex + attestation hash leave the device. Keys never do.</td></tr>
+      <tr><td>Approvals can't be replayed</td><td>The attestation binds payload + key identifier. A captured signature verifies for nothing else.</td></tr>
+      <tr><td>Wrong identity can't be approved</td><td>Server-side allowlist per key identifier; rejection is audited.</td></tr>
+      <tr><td>Stale agent response rejected</td><td>Module verifies the ECDSA signature over the attestation with the pinned public key.</td></tr>
+    </table>
+    <div class="note">
+      <p><strong>What it is not.</strong> Cryptographic key splitting. The notary's full private key still lives on the module's device. This is operational 2-of-2. Signing requires both parties live at the same time. True 2P-ECDSA key splitting is the roadmap item that removes that trust.</p>
+    </div>
+
+    <h2>Configuration</h2>
+    <p>Module config (inside each Paladin node's <code>signingModules</code> section of the CR):</p>
+    <pre>signingModules:
+  - name: notary-2of2
+    plugin: { type: c-shared, library: /app/signingmodules/libnotary2of2.so }
+    configJSON: |
+      {
+        "signer": {
+          "keyStore": { "type": "static", "static": { "keys": {
+            "seed": { "encoding": "none", "inline": "&lt;mnemonic&gt;" } } } },
+          "keyDerivation": { "type": "bip32" }
+        },
+        "cosigner": {
+          "url": "http://&lt;other-device&gt;:9191",
+          "publicKey": "&lt;agent public key hex&gt;",
+          "timeoutSeconds": 10
+        }
+      }
+
+wallets:
+  - name: notary-2of2-wallet
+    keySelector: ".*"
+    signerType: plugin
+    signerPluginName: notary-2of2</pre>
+    <p>Agent config (per device):</p>
+    <pre>{
+  "listen": ":9191",
+  "privateKey": "&lt;hex DER EC private key&gt;",
+  "allowedKeyIdentifiers": ["notary@node.*"]
+}</pre>
+
+    <h2>Deployment</h2>
+    <table>
+      <tr><th>Form</th><th>Artifact</th></tr>
+      <tr><td>Agent as Docker container</td><td><code>signingmodules/notary-2of2/cosigner/Dockerfile</code>. Stdlib only, ~12 MB.</td></tr>
+      <tr><td>Agent in Kubernetes</td><td><code>cosigner/k8s.yaml</code>. Secret + Deployment + ClusterIP Service.</td></tr>
+      <tr><td>Agent as bare binary</td><td><code>go build -o cosigner .</code>. launchd / systemd.</td></tr>
+      <tr><td>Module</td><td>compiled into the custom Paladin image (<code>scripts/build-signingmodule.sh</code>)</td></tr>
+      <tr><td>Transport between devices</td><td>Tailscale / WireGuard tunnel; API spec in <code>cosigner/API.md</code></td></tr>
+    </table>
+
+    <p class="back"><a href="https://lopezpalacios.github.io/paladin-cluster/">← back to landing</a> · <a href="cosign-sequence.html">sequence diagram</a> · <a href="workflows.html">workflows overview</a></p>
   </div>
 </body>
 </html>
