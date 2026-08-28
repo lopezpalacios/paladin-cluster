@@ -1,0 +1,21 @@
+{
+  "name": "paladin-example-pente-group",
+  "version": "0.1.0",
+  "description": "Create a Pente privacy group between two Paladin nodes",
+  "main": "build/index.js",
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "start": "ts-node ./src/index.ts"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@lfdecentralizedtrust/paladin-sdk": "^1.0.0",
+    "solc": "^0.8.26"
+  }
+}
