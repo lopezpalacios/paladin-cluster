@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paladin Cluster — public parts, private parts, two devices</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper:  #f5f5f5;
+      --ink:    #2d3142;
+      --muted:  #4f5d75;
+      --accent: #eb6c36;
+      --link:   #2e5aa8;
+      --sans:   'Geist', system-ui, sans-serif;
+      --serif:  'Instrument Serif', serif;
+      --mono:   'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--sans);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 3.5rem 2rem 4rem; }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw + 1rem, 3.2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin: 3rem 0 1rem;
+    }
+    .lede {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin-bottom: 2rem;
+    }
+    .hero { border-bottom: 1px solid rgba(45,49,66,0.15); padding-bottom: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(45,49,66,0.15);
+      border-radius: 6px;
+      padding: 1.25rem 1.25rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .card .tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .card h3 { font-size: 1.05rem; font-weight: 600; }
+    .card p { font-size: 0.9rem; color: var(--muted); flex: 1; }
+    .card .cmd {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      background: rgba(45,49,66,0.05);
+      border-radius: 4px;
+      padding: 0.5rem 0.65rem;
+      color: var(--ink);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    a { color: var(--link); text-decoration: none; border-bottom: 1px solid rgba(46,90,168,0.3); }
+    a:hover { border-bottom-color: var(--link); }
+    .pill {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      padding: 0.15rem 0.7rem;
+      border: 1px solid rgba(45,49,66,0.2);
+      color: var(--muted);
+      margin-right: 0.4rem;
+    }
+    .pill.accent { border-color: var(--accent); color: var(--accent); }
+    .rule { border-top: 1px solid rgba(45,49,66,0.15); margin: 2.5rem 0; }
+    .foot { font-size: 0.78rem; color: var(--muted); font-family: var(--mono); }
+    code { font-family: var(--mono); font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="hero">
+      <p class="eyebrow">Paladin · LFDT · lopezpalacios/paladin-cluster</p>
+      <h1>Public parts. Private parts.<br>Two devices, one notary that cannot lie alone.</h1>
+      <p class="lede">
+        One chain. Some transactions fully readable on the explorer. Others exist only as a
+        hash on-chain and real data between the member nodes. A 2-of-2 signing module so
+        neither device can sign without the other. Run any example in one command.
+      </p>
+      <span class="pill accent">sepolia</span><span class="pill">kind + besu</span><span class="pill">pente</span><span class="pill">noto</span><span class="pill">zeto + KYC</span><span class="pill">2-of-2 cosign API</span>
+    </div>
+
+    <h2>The idea</h2>
+    <div class="grid">
+      <div class="card">
+        <p class="tag">Public section</p>
+        <h3>Everything readable on the chain</h3>
+        <p>ERC20 balances, KYC registrations, plain deploys. Real data in real blocks — visible on the explorer by anyone.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Private section</p>
+        <h3>Only a hash on the chain</h3>
+        <p>Pente groups and Zeto proofs. Amounts and parties live only in member state stores. The chain sees a commitment and a valid proof.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Two-device control</p>
+        <h3>Neither notary signs alone</h3>
+        <p>A signing module in each node calls the other device's cosigner API before the local key may sign. One side offline = frozen.</p>
+      </div>
+    </div>
+
+    <h2>Examples</h2>
+    <div class="grid">
+      <div class="card">
+        <p class="tag">examples/hello-vlad</p>
+        <h3>HelloVlad</h3>
+        <p>Compile your own <code>hello-vlad.sol</code> with solc, deploy publicly on Sepolia, call <code>sayHello</code>, verify the event.</p>
+        <div class="cmd">npm run compile && npm run start</div>
+      </div>
+      <div class="card">
+        <p class="tag">examples/storage-vlad</p>
+        <h3>StorageVlad</h3>
+        <p>Public store of a string + uint256 on Sepolia. “i send vlad 8152 chf” — readable by everyone on etherscan.</p>
+        <div class="cmd">npm run compile && npm run start</div>
+      </div>
+      <div class="card">
+        <p class="tag">examples/pente-group</p>
+        <h3>Private contract in a group</h3>
+        <p>Privacy group of node1+node2, private deploy, private store, node3 outsider gets “group not found”.</p>
+        <div class="cmd">npm run start</div>
+      </div>
+      <div class="card">
+        <p class="tag">examples/noto-token</p>
+        <h3>Notarized tokens</h3>
+        <p>Mint, transfer, burn with a notary. Receipt visibility: notary sees all, receiver sees only its own coin.</p>
+        <div class="cmd">npm run start · npx ts-node src/burn.ts</div>
+      </div>
+      <div class="card">
+        <p class="tag">examples/private-stablecoin</p>
+        <h3>Private stablecoin with KYC</h3>
+        <p>Public ERC20 + private Zeto, deposit/withdraw bridge, ZK transfers with KYC. The public/private split, complete.</p>
+        <div class="cmd">in paladin repo: examples/private-stablecoin</div>
+      </div>
+      <div class="card">
+        <p class="tag">examples/notary-2of2</p>
+        <h3>Two-device co-signed notary</h3>
+        <p>Cosigner API on each device. Approval, policy rejection, and freeze-when-peer-down — demonstrated with curl.</p>
+        <div class="cmd">./demo.sh</div>
+      </div>
+    </div>
+
+    <h2>Diagrams</h2>
+    <div class="grid">
+      <div class="card">
+        <p class="tag">Architecture</p>
+        <h3><a href="diagrams/cosign-architecture.html">2-of-2 notary across two devices</a></h3>
+        <p>Both devices, modules, cosigner APIs, and the two HTTP approval edges.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Sequence</p>
+        <h3><a href="diagrams/cosign-sequence.html">One sign request under 2-of-2</a></h3>
+        <p>Sign → attestation → policy → verify → signed payload, with the rejection branch.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Overview</p>
+        <h3><a href="diagrams/workflows.html">All workflows</a></h3>
+        <p>Sepolia public, devnet private groups, noto notary, 2-of-2 signing — side by side.</p>
+      </div>
+    </div>
+
+    <h2>Two devices, quickstart</h2>
+    <div class="card">
+      <div class="cmd">git clone https://github.com/lopezpalacios/paladin-cluster.git && cd paladin-cluster<br>./install-tools.sh && ./start-paladin.sh   # or: nix develop && ./start-paladin.sh</div>
+      <p style="margin-top:0.6rem">Each device runs its own stack. The cosigner API (port 9191) pairs them. <a href="signingmodules/notary-2of2/cosigner/API.md">API spec</a>.</p>
+    </div>
+
+    <div class="rule"></div>
+    <p class="foot">paladin-cluster · diagrams in diagram-design style · base ledger: Sepolia (public) and local Besu (private) · agent guide: AGENTS.md</p>
+
+  </div>
+</body>
+</html>

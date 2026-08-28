@@ -2,6 +2,8 @@
 
 Paladin (LFDT) starter for two devices. Clone on each machine, run one script, choose your base ledger.
 
+**Landing page:** [docs/index.html](docs/index.html) — all examples, the public/private idea, and the diagrams.
+
 ## What it does
 
 `start-paladin.sh` asks one question:
